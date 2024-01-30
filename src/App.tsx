@@ -10,9 +10,9 @@ import useLoadModels from "./hooks/useLoadModels";
 function App() {
     const [expressions, setExpressions] = useState("");
     const [loading, setLoading] = useState(true);
+
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    console.log(videoRef.current);
 
     useWebcam(videoRef);
     useLoadModels();
@@ -22,6 +22,7 @@ function App() {
         const canvasEl = canvasRef.current as HTMLCanvasElement;
 
         if (!videoEl || !canvasEl) return;
+
         const detection = await faceapi
             .detectSingleFace(
                 videoEl as HTMLVideoElement,
@@ -34,9 +35,10 @@ function App() {
         if (detection) {
             const primaryExpression = detection.expressions.asSortedArray()[0];
             setExpressions(primaryExpression.expression);
+
             const dimensions = {
-                width: videoEl?.width,
-                height: videoEl?.height,
+                width: videoEl.offsetWidth,
+                height: videoEl.offsetHeight,
             };
 
             faceapi.matchDimensions(canvasEl, dimensions);
